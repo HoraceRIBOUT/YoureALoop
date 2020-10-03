@@ -55,6 +55,9 @@ public class Hero : MonoBehaviour
             shapeMod.scale = Vector3.one * size;
 
             //predictSprite.localScale = Vector3.one * size;
+
+            //every X step ? better?
+            predictParticle.Play();
         }
 
         if (Input.GetMouseButtonDown(1))

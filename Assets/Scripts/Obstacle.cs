@@ -10,6 +10,7 @@ public class Obstacle : MonoBehaviour
         if (hero != null)
         {
             hero.bounceBack = !hero.bounceBack;
+            hero.leftDirection = !hero.leftDirection;
         }
     }
 }
