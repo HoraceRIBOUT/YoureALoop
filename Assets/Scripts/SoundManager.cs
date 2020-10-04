@@ -5,7 +5,6 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public AudioSource pianoRain;
-    public AudioSource thunder;
     public AudioSource movieBoom;
     public AudioSource tibetanSing_grave;
     public AudioSource tibetanSing_light;
@@ -13,7 +12,6 @@ public class SoundManager : MonoBehaviour
     public AudioSource drone_grave;
     public AudioSource drone_tension;
     public AudioSource rainWindow;
-    public List<AudioSource> listBell;
     public List<AudioSource> listTaiko;
 
     [Header("Mixage (volume)")]
@@ -70,10 +68,13 @@ public class SoundManager : MonoBehaviour
     }
     public void ProgressManagement()
     {
-        distanceMade += Time.deltaTime;
         float ratio = distanceMade / 30;
         if (distanceMade > 30)
-            ratio = (distanceMade - 30) / 60;
+            ratio = (distanceMade - 30) / 30;
+        if (distanceMade > 60)
+            ratio = (distanceMade - 60) / 30;
+        if (distanceMade > 90)
+            ratio = 1;
 
         float volume = ratio * (sizeVolumeCurve.Evaluate(sizeOfTheHero));
         float otherVolume = ratio * (1 - sizeVolumeCurve.Evaluate(sizeOfTheHero));
@@ -81,7 +82,7 @@ public class SoundManager : MonoBehaviour
         //Zero then tibet then rain and piano then the end
 
         //First step = 
-        if(distanceMade > 30)
+        if(distanceMade > 60)
         {
             //Second step = 
             float offset = 0.3f;
@@ -89,10 +90,11 @@ public class SoundManager : MonoBehaviour
             pianoRain.volume = volume;
             rainWindow.volume = otherVolume;
 
-            tibetanSing_grave.volume = 0;
-            tibetanSing_light.volume = 0;
+
+            tibetanSing_grave.volume -= Time.deltaTime * 0.1f;
+            tibetanSing_light.volume -= Time.deltaTime * 0.1f;
         }
-        else
+        else if(distanceMade > 30)
         {
             tibetanSing_grave.volume = volume;
             tibetanSing_light.volume = otherVolume;
@@ -101,19 +103,7 @@ public class SoundManager : MonoBehaviour
     }
 
     public void SwitchSound(bool left)
-    {
-        indexForBell++;
-        if (indexForBell == listBell.Count)
-            indexForBell = 0;
-
-        if (listBell[indexForBell].isPlaying)
-        {
-            listBell[indexForBell].Stop();
-            listBell[indexForBell].time = 0;
-        }
-        listBell[indexForBell].Play();
-
-        
+    {        
         StartCoroutine(makeDroneVolumeToZeroVeryQuick());
     }
 

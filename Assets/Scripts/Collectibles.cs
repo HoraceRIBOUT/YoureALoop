@@ -35,6 +35,9 @@ public class Collectibles : MonoBehaviour
     {
         shape1.scale = Vector3.one + Vector3.one * 0.4f * (Mathf.Sin(Time.time/15) + 1f) * 0.5f + dead * Vector3.one;
         shape2.scale = Vector3.one + Vector3.one * 0.4f * (Mathf.Cos(Time.time/15) + 1f) * 0.5f + dead * Vector3.one;
+
+
+        //verify distance from Hero for sound
     }
 
     public void Kill()

@@ -76,9 +76,11 @@ public class LDManager : MonoBehaviour
         foreach (GameObject gO in listLevel[indexCurrent].part)
         {
             gO.SetActive(true);
-            float randomWait = Random.Range(0.01f, 0.1f);
+            float randomWait = Random.Range(0.001f, 0.02f);
             yield return new WaitForSeconds(randomWait);
         }
     }
+
+    
 
 }
