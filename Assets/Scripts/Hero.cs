@@ -47,6 +47,8 @@ public class Hero : MonoBehaviour
         ParticleSystem.MainModule ps = Instantiate(impactGO, collision.contacts[0].point, quat, null).GetComponentInChildren<ParticleSystem>().main;
 
         ps.startColor = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
+
+        SoundManager.instance.WallSound(leftDirection);
     }
 
     /// <summary>
@@ -90,6 +92,9 @@ public class Hero : MonoBehaviour
             mainMod.startColor = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
             SwitchAllAlternating();
             predictParticle.Play();
+
+
+            SoundManager.instance.SwitchSound(leftDirection);
         }
 
 
@@ -159,7 +164,7 @@ public class Hero : MonoBehaviour
                 memorieSize = size;
             }
             //predictSprite.localScale = Vector3.one * size;
-
+            SoundManager.instance.AddSizeChange(Mathf.Abs(sizeBefore - size));
         }
 
     }
