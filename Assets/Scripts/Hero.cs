@@ -9,6 +9,7 @@ public class Hero : MonoBehaviour
     public bool bounceBack = false;
     [Range(0.3f,5f)]
     public float size = 1f;
+    public Vector2 sizeMaxMin = new Vector2(0.3f, 5f);
     public AnimationCurve speedAdaptator = AnimationCurve.Linear(0,0,1,1);
 
     public Vector2 currentTangent = new Vector2(0, 1);
@@ -82,7 +83,7 @@ public class Hero : MonoBehaviour
 
     public void InputManagement()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
             leftDirection = !leftDirection;
             body_point.color = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().heroLeft : Palette.instance.GetCurrentColorPalette().heroRight);
@@ -91,19 +92,59 @@ public class Hero : MonoBehaviour
             predictParticle.Play();
         }
 
+
+        float sizeBefore = size;
         if (Input.GetMouseButton(1))
         {
             size += Time.deltaTime * 4f * (goingUp ? 1 : -1);
-            if (size > 5f)
+            if (size > sizeMaxMin.y)
                 goingUp = false;
-            else if (size < 0.3f)
+            else if (size < sizeMaxMin.x)
                 goingUp = true;
+        }
 
+        if (Input.mouseScrollDelta.y != 0)
+        {
+            size += Time.deltaTime * 16f * Input.mouseScrollDelta.y;
+
+            if (size >= sizeMaxMin.y)
+                size = sizeMaxMin.y;
+            else if (size <= sizeMaxMin.x)
+                size = sizeMaxMin.x;
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            size += Time.deltaTime * 4f;
+            if (size >= sizeMaxMin.y)
+                size = sizeMaxMin.y;
+
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            size -= Time.deltaTime * 4f;
+            if (size <= sizeMaxMin.x)
+                size = sizeMaxMin.x;
+        }
+
+
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            //predictAnimator.SetBool("Change", true);
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            //predictAnimator.SetBool("Change", false);
+        }
+
+        if(sizeBefore != size)
+        {
             shapeMod.scale = Vector3.one * size;
             burstMod.count = rateAdjusteur.Evaluate(size);
             predictParticle.emission.SetBurst(0, burstMod);
 
-            if (Mathf.Abs(memorieSize -size) > sizeDelta )
+            if (Mathf.Abs(memorieSize - size) > sizeDelta)
             {
                 ParticleSystem pS = Instantiate(sizeParticule, predict.position, Quaternion.identity, null).GetComponent<ParticleSystem>();
 
@@ -118,16 +159,7 @@ public class Hero : MonoBehaviour
                 memorieSize = size;
             }
             //predictSprite.localScale = Vector3.one * size;
-            
-        }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            //predictAnimator.SetBool("Change", true);
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            //predictAnimator.SetBool("Change", false);
         }
 
     }
@@ -186,9 +218,6 @@ public class Hero : MonoBehaviour
 
     public void PreviewManager()
     {
-        Vector3 target = (Vector2)this.transform.position + currentTangent * (bounceBack ? -1 : 1);
-        float dot = Vector3.Dot(Vector3.up, (target - this.transform.position).normalized);
-        float sign = Mathf.Sign(Vector3.Cross(Vector3.forward, (target - this.transform.position)).y);
-        body.transform.localEulerAngles = Vector3.forward * (dot - 1) * 90 * sign;
+        body.transform.rotation = Quaternion.FromToRotation(Vector3.up, currentTangent * (bounceBack ? -1 : 1));
     }
 }
