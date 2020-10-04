@@ -5,6 +5,17 @@ using MyBox;
 
 public class Palette : MonoBehaviour
 {
+    public static Palette instance;
+    public void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+        {
+            Debug.LogError("Hooo stop la");
+        }
+    }
+
     [System.Serializable]
     public struct colourList
     {
@@ -25,6 +36,10 @@ public class Palette : MonoBehaviour
     public List<colourList> paletteList = new List<colourList>();
     public int currentPalette = 0;
 
+    public colourList GetCurrentColorPalette()
+    {
+        return paletteList[currentPalette];
+    }
 
     [MyBox.ButtonMethod]
     public void ReColorAll()

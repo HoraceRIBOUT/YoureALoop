@@ -20,6 +20,7 @@ public class Hero : MonoBehaviour
 
     [Header("Body visual")]
     public Transform body;
+    public SpriteRenderer body_point;
 
     [Header("Predict part")]
     public Transform predict;
@@ -27,7 +28,8 @@ public class Hero : MonoBehaviour
     //public Animator predictAnimator;
     public ParticleSystem predictParticle;
     public ParticleSystem.ShapeModule shapeMod;
-    public ParticleSystem.Burst emisMod;
+    public ParticleSystem.MainModule mainMod;
+    public ParticleSystem.Burst burstMod;
 
     public AnimationCurve rateAdjusteur = AnimationCurve.Linear(1, 300, 5, 600);
     public GameObject sizeParticule;
@@ -40,7 +42,8 @@ public class Hero : MonoBehaviour
 
         predictParticle = predict.GetComponent<ParticleSystem>();
         shapeMod = predictParticle.shape;
-        emisMod = predictParticle.emission.GetBurst(0);
+        mainMod = predictParticle.main;
+        burstMod = predictParticle.emission.GetBurst(0);
     }
 
     public void InputManagement()
@@ -48,6 +51,8 @@ public class Hero : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             leftDirection = !leftDirection;
+            body_point.color = (leftDirection ? Palette.instance.GetCurrentColorPalette().heroLeft : Palette.instance.GetCurrentColorPalette().heroRight);
+            mainMod.startColor = (leftDirection ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
             predictParticle.Play();
         }
 
@@ -60,8 +65,8 @@ public class Hero : MonoBehaviour
                 goingUp = true;
 
             shapeMod.scale = Vector3.one * size;
-            emisMod.count = rateAdjusteur.Evaluate(size);
-            predictParticle.emission.SetBurst(0, emisMod);
+            burstMod.count = rateAdjusteur.Evaluate(size);
+            predictParticle.emission.SetBurst(0, burstMod);
 
             if (Mathf.Abs(memorieSize -size) > sizeDelta )
             {
@@ -72,7 +77,9 @@ public class Hero : MonoBehaviour
                 ParticleSystem.Burst emis = pS.emission.GetBurst(0);
                 emis.count = rateAdjusteur.Evaluate(size);
                 pS.emission.SetBurst(0, emis);
-                //Color too
+                ParticleSystem.MainModule main = pS.main;
+                main.startColor = (leftDirection ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
+
                 memorieSize = size;
             }
             //predictSprite.localScale = Vector3.one * size;
