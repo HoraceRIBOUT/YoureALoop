@@ -164,7 +164,7 @@ public class Hero : MonoBehaviour
                 memorieSize = size;
             }
             //predictSprite.localScale = Vector3.one * size;
-            SoundManager.instance.AddSizeChange(Mathf.Abs(sizeBefore - size));
+            SoundManager.instance.AddSizeChange(size, Mathf.Abs(sizeBefore - size));
         }
 
     }

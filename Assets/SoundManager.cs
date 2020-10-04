@@ -17,6 +17,8 @@ public class SoundManager : MonoBehaviour
     public List<AudioSource> listTaiko;
 
     [Header("Mixage (volume)")]
+    public AnimationCurve ratioSizeVolume;
+    private float sizeOfTheHero = 1;
     public float drone_tension_volumeMAX = 0.583f;
 
     private float tensionVolume = 0;
@@ -63,11 +65,40 @@ public class SoundManager : MonoBehaviour
         }
 
 
-
-
+        ProgressManagement();
 
     }
+    public void ProgressManagement()
+    {
+        distanceMade += Time.deltaTime;
+        float ratio = distanceMade / 30;
+        if (distanceMade > 30)
+            ratio = (distanceMade - 30) / 60;
 
+        float volume = ratio * (sizeVolumeCurve.Evaluate(sizeOfTheHero));
+        float otherVolume = ratio * (1 - sizeVolumeCurve.Evaluate(sizeOfTheHero));
+
+        //Zero then tibet then rain and piano then the end
+
+        //First step = 
+        if(distanceMade > 30)
+        {
+            //Second step = 
+            float offset = 0.3f;
+            volume = ratio * (sizeVolumeCurve.Evaluate(sizeOfTheHero) + offset);
+            pianoRain.volume = volume;
+            rainWindow.volume = otherVolume;
+
+            tibetanSing_grave.volume = 0;
+            tibetanSing_light.volume = 0;
+        }
+        else
+        {
+            tibetanSing_grave.volume = volume;
+            tibetanSing_light.volume = otherVolume;
+        }
+
+    }
 
     public void SwitchSound(bool left)
     {
@@ -103,13 +134,14 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void AddSizeChange(float distanceMade)
+    public void AddSizeChange(float size, float distanceMade)
     {
         sizeVolume += distanceMade * 0.5f;
         if (sizeVolume > 1)
             sizeVolume = 1;
 
         drone_grave.volume = sizeVolumeCurve.Evaluate(sizeVolume);
+        sizeOfTheHero = size;
     }
 
 
