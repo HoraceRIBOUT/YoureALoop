@@ -38,6 +38,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Off
+    uniqueID: 8109313
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Trail
+    uniqueID: 1015052711
+    locked: 0
+  - name: On
+    uniqueID: 3308371477
     locked: 0

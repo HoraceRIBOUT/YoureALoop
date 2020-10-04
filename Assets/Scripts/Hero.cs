@@ -34,16 +34,36 @@ public class Hero : MonoBehaviour
     public AnimationCurve rateAdjusteur = AnimationCurve.Linear(1, 300, 5, 600);
     public GameObject sizeParticule;
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// 
+    /// </summary>
+    private AlternatingGO[] allAlterningGOs;
+    public void Start()
     {
-        InputManagement();
-        MovementManagement();
+        allAlterningGOs = FindObjectsOfType<AlternatingGO>();
 
         predictParticle = predict.GetComponent<ParticleSystem>();
         shapeMod = predictParticle.shape;
         mainMod = predictParticle.main;
         burstMod = predictParticle.emission.GetBurst(0);
+
+        SwitchAllAlternating();
+    }
+
+
+    public void SwitchAllAlternating()
+    {
+        foreach (AlternatingGO alT in allAlterningGOs)
+        {
+            alT.SwitchSide(leftDirection ^ bounceBack);
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        InputManagement();
+        MovementManagement();
     }
 
     public void InputManagement()
@@ -51,8 +71,9 @@ public class Hero : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             leftDirection = !leftDirection;
-            body_point.color = (leftDirection ? Palette.instance.GetCurrentColorPalette().heroLeft : Palette.instance.GetCurrentColorPalette().heroRight);
-            mainMod.startColor = (leftDirection ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
+            body_point.color = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().heroLeft : Palette.instance.GetCurrentColorPalette().heroRight);
+            mainMod.startColor = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
+            SwitchAllAlternating();
             predictParticle.Play();
         }
 
@@ -78,7 +99,7 @@ public class Hero : MonoBehaviour
                 emis.count = rateAdjusteur.Evaluate(size);
                 pS.emission.SetBurst(0, emis);
                 ParticleSystem.MainModule main = pS.main;
-                main.startColor = (leftDirection ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
+                main.startColor = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
 
                 memorieSize = size;
             }

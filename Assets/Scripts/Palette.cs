@@ -62,8 +62,21 @@ public class Palette : MonoBehaviour
             {
                 sR.color = curre.heroRight;
             }
-            if (sR.name.Contains("colEnn"))
+            if (sR.name.Contains("oncolEnnL"))
             {
+                sR.color = curre.ennemiLeftOn;
+            }
+            if (sR.name.Contains("offcolEnnL"))
+            {
+                sR.color = curre.ennemiLeftOff;
+            }
+            if (sR.name.Contains("oncolEnnR"))
+            {
+                sR.color = curre.ennemiRightOn;
+            }
+            if (sR.name.Contains("offcolEnnR"))
+            {
+                sR.color = curre.ennemiRightOff;
             }
             if (sR.name.Contains("colObs"))
             {
