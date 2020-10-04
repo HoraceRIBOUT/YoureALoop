@@ -57,7 +57,7 @@ public class Hero : MonoBehaviour
     private AlternatingGO[] allAlterningGOs;
     public void Start()
     {
-        allAlterningGOs = FindObjectsOfType<AlternatingGO>();
+        allAlterningGOs = FindObjectsOfType<AlternatingGO>(true);
 
         predictParticle = predict.GetComponent<ParticleSystem>();
         shapeMod = predictParticle.shape;
@@ -85,6 +85,10 @@ public class Hero : MonoBehaviour
 
     public void InputManagement()
     {
+        if (Input.GetKey(KeyCode.Escape))
+            Application.Quit();
+
+
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
             leftDirection = !leftDirection;
@@ -92,8 +96,7 @@ public class Hero : MonoBehaviour
             mainMod.startColor = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
             SwitchAllAlternating();
             predictParticle.Play();
-
-
+            
             SoundManager.instance.SwitchSound(leftDirection);
         }
 
@@ -132,16 +135,7 @@ public class Hero : MonoBehaviour
                 size = sizeMaxMin.x;
         }
 
-
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            //predictAnimator.SetBool("Change", true);
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            //predictAnimator.SetBool("Change", false);
-        }
+        
 
         if(sizeBefore != size)
         {
@@ -194,7 +188,7 @@ public class Hero : MonoBehaviour
 
         //debugObj[1].transform.position = (Vector2)this.transform.position + centerPosition;
 
-        Vector2 falseObjectif =Vector3.Project(centerPosition, newTangent);
+        Vector2 falseObjectif = Vector3.Project(centerPosition, newTangent);
         
         Vector2 directionFromCenter = falseObjectif - centerPosition;
         directionFromCenter = directionFromCenter.normalized * size;
