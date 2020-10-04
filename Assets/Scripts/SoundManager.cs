@@ -69,12 +69,9 @@ public class SoundManager : MonoBehaviour
     public void ProgressManagement()
     {
         float ratio = distanceMade / 30;
+        distanceMade += Time.deltaTime * 0.1f;
         if (distanceMade > 30)
-            ratio = (distanceMade - 30) / 30;
-        if (distanceMade > 60)
-            ratio = (distanceMade - 60) / 30;
-        if (distanceMade > 90)
-            ratio = 1;
+            distanceMade = 30;
 
         float volume = ratio * (sizeVolumeCurve.Evaluate(sizeOfTheHero));
         float otherVolume = ratio * (1 - sizeVolumeCurve.Evaluate(sizeOfTheHero));
@@ -82,11 +79,12 @@ public class SoundManager : MonoBehaviour
         //Zero then tibet then rain and piano then the end
 
         //First step = 
-        if(distanceMade > 60)
+        if(level == 2)
         {
             //Second step = 
             float offset = 0.3f;
             volume = ratio * (sizeVolumeCurve.Evaluate(sizeOfTheHero) + offset);
+            //Debug.Log("Volume (2) " + volume);
             pianoRain.volume = volume;
             rainWindow.volume = otherVolume;
 
@@ -94,13 +92,46 @@ public class SoundManager : MonoBehaviour
             tibetanSing_grave.volume -= Time.deltaTime * 0.1f;
             tibetanSing_light.volume -= Time.deltaTime * 0.1f;
         }
-        else if(distanceMade > 30)
+        else if(level == 1)
         {
+            //Debug.Log("Volume (1) " + volume);
             tibetanSing_grave.volume = volume;
             tibetanSing_light.volume = otherVolume;
         }
 
     }
+    public int level = 0;
+    public void GoToNextLevel()
+    {
+        Debug.Log("Next level !" + level);
+        level++; 
+        distanceMade = 0;
+
+
+        if(level == 4)
+        {
+            StartCoroutine(DisplayEndText());
+        }
+
+    }
+
+    public UnityEngine.UI.Text textEnd;
+    public UnityEngine.UI.Text textThanks;
+    public IEnumerator DisplayEndText()
+    {
+        while (textEnd.color.a < 1)
+        {
+            textEnd.color += Color.black * Time.deltaTime * 0.3f;
+            yield return new WaitForSeconds(0.005f);
+        }
+        yield return new WaitForSeconds(2f);
+        while (textThanks.color.a < 1)
+        {
+            textThanks.color += Color.black * Time.deltaTime * 0.3f;
+            yield return new WaitForSeconds(0.005f);
+        }
+    }
+
 
     public void SwitchSound(bool left)
     {        

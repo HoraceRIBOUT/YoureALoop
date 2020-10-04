@@ -18,6 +18,8 @@ public class Collectibles : MonoBehaviour
             main1.startSpeed = 5;
             main2.startSpeed = 5;
             Invoke("Kill", 3.0f);
+
+            SoundManager.instance.GoToNextLevel();
         }
     }
     
