@@ -10,13 +10,16 @@ public class Palette : MonoBehaviour
     {
         public string id;
         public Color background;
-        public Color hero;
-        public Color heroOtherSens;
+        public Color hero;//also, trail
         public Color heroLeft;
         public Color heroRight;
-        public Color ennemi;
+        public Gradient particleLeft;
+        public Gradient particleRight;
+        public Color ennemiLeftOn;
+        public Color ennemiLeftOff;
+        public Color ennemiRightOn;
+        public Color ennemiRightOff;
         public Color obstacle;
-        public Color wall;
     }
 
     public List<colourList> paletteList = new List<colourList>();
@@ -46,7 +49,6 @@ public class Palette : MonoBehaviour
             }
             if (sR.name.Contains("colEnn"))
             {
-                sR.color = curre.ennemi;
             }
             if (sR.name.Contains("colObs"))
             {
@@ -54,10 +56,31 @@ public class Palette : MonoBehaviour
             }
             if (sR.name.Contains("colWall"))
             {
-                sR.color = curre.wall;
+
             }
         }
 
         FindObjectOfType<Camera>().backgroundColor = curre.background;
+    }
+
+
+    [ButtonMethod()]
+    public void SetAllTransparencyToOne()
+    {
+        for (int i = 0; i < paletteList.Count; i++)
+        {
+            colourList list = paletteList[i];
+            list.background.a = 1;
+            list.hero.a = 1;
+            list.heroLeft.a = 1;
+            list.heroRight.a = 1;
+            list.ennemiLeftOn.a = 1;
+            list.ennemiLeftOff.a = 1;
+            list.ennemiRightOn.a = 1;
+            list.ennemiRightOff.a = 1;
+            list.obstacle.a = 1;
+
+            paletteList[i] = list;
+        }
     }
 }

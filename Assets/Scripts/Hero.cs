@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
+    [Header("Movement")]
     public bool leftDirection = false;
     public bool bounceBack = false;
     [Range(0.3f,5f)]
     public float size = 1f;
+    public AnimationCurve speedAdaptator = AnimationCurve.Linear(0,0,1,1);
 
     public Vector2 currentTangent = new Vector2(0, 1);
     public float accumulateur = 0;
@@ -25,6 +27,10 @@ public class Hero : MonoBehaviour
     //public Animator predictAnimator;
     public ParticleSystem predictParticle;
     public ParticleSystem.ShapeModule shapeMod;
+    public ParticleSystem.Burst emisMod;
+
+    public AnimationCurve rateAdjusteur = AnimationCurve.Linear(1, 300, 5, 600);
+    public GameObject sizeParticule;
 
     // Update is called once per frame
     void Update()
@@ -34,6 +40,7 @@ public class Hero : MonoBehaviour
 
         predictParticle = predict.GetComponent<ParticleSystem>();
         shapeMod = predictParticle.shape;
+        emisMod = predictParticle.emission.GetBurst(0);
     }
 
     public void InputManagement()
@@ -53,11 +60,23 @@ public class Hero : MonoBehaviour
                 goingUp = true;
 
             shapeMod.scale = Vector3.one * size;
+            emisMod.count = rateAdjusteur.Evaluate(size);
+            predictParticle.emission.SetBurst(0, emisMod);
 
+            if (Mathf.Abs(memorieSize -size) > sizeDelta )
+            {
+                ParticleSystem pS = Instantiate(sizeParticule, predict.position, Quaternion.identity, null).GetComponent<ParticleSystem>();
+
+                ParticleSystem.ShapeModule shape = pS.shape;
+                shape.scale = Vector3.one * size;
+                ParticleSystem.Burst emis = pS.emission.GetBurst(0);
+                emis.count = rateAdjusteur.Evaluate(size);
+                pS.emission.SetBurst(0, emis);
+                //Color too
+                memorieSize = size;
+            }
             //predictSprite.localScale = Vector3.one * size;
-
-            //every X step ? better?
-            predictParticle.Play();
+            
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -71,10 +90,14 @@ public class Hero : MonoBehaviour
 
     }
     private bool goingUp = true;
+    public float sizeDelta = 0.6f;
+    private float memorieSize = 1f;
 
     public void MovementManagement()
     {
-        float newAccumulateur = accumulateur + Time.deltaTime * (leftDirection ? -1 : 1) * (bounceBack ? -1 : 1) * rotationSpeed * (1/size);
+        float speedAjusteur = (1 / (speedAdaptator.Evaluate(size)));
+        float directionAjusteur = (leftDirection ? -1 : 1) * (bounceBack ? -1 : 1);
+        float newAccumulateur = accumulateur + Time.deltaTime * directionAjusteur * rotationSpeed * speedAjusteur;
         Vector2 newTangent;
         newTangent.x = Mathf.Sin(newAccumulateur);
         newTangent.y = Mathf.Cos(newAccumulateur);
