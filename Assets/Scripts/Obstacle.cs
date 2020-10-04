@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    public void OnTriggerEnter2D(Collider2D collision)
+    public void OnCollisionEnter2D(Collision2D collision)
     {
-        Hero hero = collision.GetComponent<Hero>();
+        Hero hero = collision.gameObject.GetComponent<Hero>();
         if (hero != null)
         {
-            hero.bounceBack = !hero.bounceBack;
-            hero.leftDirection = !hero.leftDirection;
+            hero.Impact(collision);
         }
     }
 }

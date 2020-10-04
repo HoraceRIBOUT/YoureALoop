@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b6142aea8bae54f90176c6b6192d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pS: {fileID: 0}
 --- !u!1001 &1711556799328750375
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84,10 +85,30 @@ PrefabInstance:
       propertyPath: lengthInSec
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 1019420424685859859, guid: e27869208ac6fe147bf9d9b6feb0a04d,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 800
+      objectReference: {fileID: 0}
+    - target: {fileID: 1019420424685859859, guid: e27869208ac6fe147bf9d9b6feb0a04d,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1019420424685859859, guid: e27869208ac6fe147bf9d9b6feb0a04d,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1019420424685859859, guid: e27869208ac6fe147bf9d9b6feb0a04d,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1019420424685859869, guid: e27869208ac6fe147bf9d9b6feb0a04d,
         type: 3}
       propertyPath: m_Name
-      value: PredictParticle
+      value: SizeParticule
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e27869208ac6fe147bf9d9b6feb0a04d, type: 3}

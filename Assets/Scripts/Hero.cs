@@ -34,6 +34,20 @@ public class Hero : MonoBehaviour
     public AnimationCurve rateAdjusteur = AnimationCurve.Linear(1, 300, 5, 600);
     public GameObject sizeParticule;
 
+    public GameObject impactGO;
+
+    public void Impact(Collision2D collision)
+    {
+       bounceBack = !bounceBack;
+       leftDirection = !leftDirection;
+
+        //transform normal into quaternion
+        Quaternion quat = Quaternion.FromToRotation(Vector3.up, -collision.contacts[0].normal);
+        ParticleSystem.MainModule ps = Instantiate(impactGO, collision.contacts[0].point, quat, null).GetComponentInChildren<ParticleSystem>().main;
+
+        ps.startColor = (leftDirection ^ bounceBack ? Palette.instance.GetCurrentColorPalette().particleLeft : Palette.instance.GetCurrentColorPalette().particleRight);
+    }
+
     /// <summary>
     /// 
     /// </summary>

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class sendTrigger : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         AlternatingGO alternating = GetComponentInParent<AlternatingGO>();
 
-        alternating.OnTriggerEnter2D(collision);
+        alternating.OnCollisionEnter2D(collision);
     }
 }
